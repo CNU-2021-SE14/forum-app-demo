@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/splash_screen.dart';
+import './screens/board_screen.dart';
+import './providers/posts.dart';
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
 import './screens/main_screen.dart';
@@ -16,14 +18,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Auth(),
         ),
-
-        // ChangeNotifierProxyProvider<Auth, Posts>(
-        //   builder: (ctx, auth, previousPosts) => Posts(
-        //     auth.token,
-        //     auth.userId,
-        //     previousPosts == null ? [] : previousPosts.items,
-        //   ),
-        // ),
+        ChangeNotifierProxyProvider<Auth, Posts>(
+          create: (_) => Posts('', '', []),
+          update: (ctx, auth, previousPosts) => Posts(
+            auth.token,
+            auth.userId,
+            previousPosts == null ? [] : previousPosts.items,
+          ),
+        )
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
                           : AuthScreen(),
                 ),
           routes: {
+            BoardScreen.routeName: (ctx) => BoardScreen(),
             // PostsDetailScreen.routeName: (ctx) => PostsDetailScreen()
           },
         ),
