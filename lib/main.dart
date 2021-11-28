@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import './screens/splash_screen.dart';
 import './screens/board_screen.dart';
+import './screens/post_detail_screen.dart';
+import './screens/edit_post_screen.dart';
 import './providers/posts.dart';
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
@@ -47,7 +49,8 @@ class MyApp extends StatelessWidget {
                 ),
           routes: {
             BoardScreen.routeName: (ctx) => BoardScreen(),
-            // PostsDetailScreen.routeName: (ctx) => PostsDetailScreen()
+            PostDetailScreen.routeName: (ctx) => PostDetailScreen(),
+            EditPostScreen.routeName: (ctx) => EditPostScreen(),
           },
         ),
       ),
