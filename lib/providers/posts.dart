@@ -99,5 +99,21 @@ class Posts with ChangeNotifier {
     }
   }
 
-  Future<void> deletePost(String id) async {}
+  Future<void> deletePost(String id) async {
+    final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
+        '/posts/$id.json?auth=$authToken');
+
+    final existingPostIndex = _items.indexWhere((post) => post.id == id);
+    Post? existingPost = _items[existingPostIndex];
+    _items.removeAt(existingPostIndex);
+    notifyListeners();
+
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingPostIndex, existingPost);
+      notifyListeners();
+      throw HttpException('Could not delete post.');
+    }
+    existingPost = null;
+  }
 }
