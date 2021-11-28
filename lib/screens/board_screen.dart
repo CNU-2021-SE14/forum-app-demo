@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/posts.dart';
 import '../providers/post.dart';
+import '../widgets/post_item.dart';
 import './main_screen.dart';
 
 class BoardScreen extends StatelessWidget {
@@ -48,8 +49,14 @@ class BoardScreen extends StatelessWidget {
                           itemCount: postsData.items.length,
                           itemBuilder: (_, i) => Column(children: [
                             PostItem(
-                              
-                            )
+                              postsData.items[i].id,
+                              postsData.items[i].title,
+                              postsData.items[i].contents,
+                              postsData.items[i].datetime,
+                              postsData.items[i].boardId,
+                              postsData.items[i].userId,
+                            ),
+                            Divider(),
                           ],),
                         ),
                         ),
