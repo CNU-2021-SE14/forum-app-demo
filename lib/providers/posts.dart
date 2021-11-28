@@ -17,4 +17,12 @@ class Posts with ChangeNotifier {
   List<Post> get items {
     return [..._items];
   }
+
+  Future<void> fetchAndSetPosts(String boardId) async {}
+
+  Future<void> addPost(Post post) async {}
+
+  Future<void> updatePost(String id, Post newPost) async {}
+
+  Future<void> deletePost(String id) async {}
 }
