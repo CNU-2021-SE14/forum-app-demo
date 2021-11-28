@@ -50,11 +50,6 @@ class BoardScreen extends StatelessWidget {
                           itemBuilder: (_, i) => Column(children: [
                             PostItem(
                               postsData.items[i].id,
-                              postsData.items[i].title,
-                              postsData.items[i].contents,
-                              postsData.items[i].datetime,
-                              postsData.items[i].boardId,
-                              postsData.items[i].userId,
                             ),
                             Divider(),
                           ],),
