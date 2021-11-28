@@ -82,7 +82,22 @@ class Posts with ChangeNotifier {
     }
   }
 
-  Future<void> updatePost(String id, Post newPost) async {}
+  Future<void> updatePost(String id, Post newPost) async {
+    final postIndex = _items.indexWhere((post) => post.id == id);
+    if (postIndex >= 0) {
+      final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
+          '/posts/$id.json?auth=$authToken');
+      await http.patch(url,
+          body: json.encode({
+            'title': newPost.title,
+            'contents': newPost.contents,
+          }));
+      _items[postIndex] = newPost;
+      notifyListeners();
+    } else {
+      print('Cannot find any post of id $id');
+    }
+  }
 
   Future<void> deletePost(String id) async {}
 }
