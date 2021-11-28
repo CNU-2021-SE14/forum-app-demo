@@ -18,7 +18,34 @@ class Posts with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> fetchAndSetPosts(String boardId) async {}
+  Future<void> fetchAndSetPosts(String boardId) async {
+    final filterString = 'orderBy="boardId"&equalTo="$boardId"';
+    var url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
+        'posts.json?auth=$authToken&$filterString');
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+
+      final List<Post> loadedPosts = [];
+      extractedData.forEach((postId, postData) {
+        loadedPosts.add(Post(
+          id: postId,
+          title: postData['title'],
+          contents: postData['contents'],
+          datetime: DateTime.parse(postData['datetime']),
+          boardId: postData['boardId'],
+          userId: postData['creatorId'],
+        ));
+      });
+      _items = loadedPosts;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
 
   Future<void> addPost(Post post) async {
     final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
