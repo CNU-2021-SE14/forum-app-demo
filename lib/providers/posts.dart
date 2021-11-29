@@ -82,7 +82,7 @@ class Posts with ChangeNotifier {
     }
   }
 
-  Future<void> updatePost(String id, Post newPost) async {
+  Future<void> updatePost(String? id, Post newPost) async {
     final postIndex = _items.indexWhere((post) => post.id == id);
     if (postIndex >= 0) {
       final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
