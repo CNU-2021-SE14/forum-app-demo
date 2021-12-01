@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import './screens/splash_screen.dart';
 import './screens/board_screen.dart';
 import './screens/post_detail_screen.dart';
@@ -9,6 +8,10 @@ import './providers/posts.dart';
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
 import './screens/main_screen.dart';
+import 'package:first_app/Board.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'providers/boards.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,12 +30,20 @@ class MyApp extends StatelessWidget {
             auth.userId,
             previousPosts == null ? [] : previousPosts.items,
           ),
-        )
+        ),
+        ChangeNotifierProxyProvider<Auth, Board_List>(
+          create: (_) => Board_List('', []),
+          update: (ctx, auth, previousBoards) => Board_List(
+            auth.token,
+            previousBoards == null ? [] : previousBoards.items,
+          ),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'ForumDemo',
           theme: ThemeData(
+            primaryColor: Colors.purple,
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
