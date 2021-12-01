@@ -7,16 +7,11 @@ import '../providers/auth.dart';
 import '../providers/post.dart';
 import '../providers/posts.dart';
 
-class PostDetailScreen extends StatefulWidget {
+class PostDetailScreen extends StatelessWidget {
   static const routeName = './postDetail';
 
   const PostDetailScreen({Key? key}) : super(key: key);
 
-  @override
-  _PostDetailScreenState createState() => _PostDetailScreenState();
-}
-
-class _PostDetailScreenState extends State<PostDetailScreen> {
   Future<void> _refreshPosts(BuildContext context, String boardId) async {
     await Provider.of<Posts>(context, listen: false).fetchAndSetPosts(boardId);
   }
@@ -24,8 +19,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context)!.settings.arguments as String;
-    final post =
-        Provider.of<Posts>(context).items.firstWhere((post) => post.id == id);
+    final post = Provider.of<Posts>(context, listen: false)
+        .items
+        .firstWhere((post) => post.id == id);
     final authUserId =
         Provider.of<Auth>(context, listen: false).userId as String;
 
@@ -53,7 +49,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     try {
                       await Provider.of<Posts>(context, listen: false)
                           .deletePost(id);
-                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                     } catch (error) {
                       Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text(
@@ -70,6 +66,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       body: RefreshIndicator(
         onRefresh: () => _refreshPosts(context, post.boardId!),
         child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.all(8),
           child: Column(
             children: <Widget>[

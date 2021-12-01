@@ -114,6 +114,8 @@ class Posts with ChangeNotifier {
       notifyListeners();
       throw HttpException('Could not delete post.');
     }
+    _items.removeWhere((post) => post.id == id);
+    notifyListeners();
     existingPost = null;
   }
 }
