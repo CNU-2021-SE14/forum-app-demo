@@ -46,17 +46,36 @@ class BoardScreen extends StatelessWidget {
                     child: Consumer<Posts>(
                       builder: (ctx, postsData, _) => Padding(
                         padding: EdgeInsets.all(8),
-                        child: ListView.builder(
-                          itemCount: postsData.items.length,
-                          itemBuilder: (_, i) => Column(
-                            children: [
-                              PostItem(
-                                postsData.items[i].id,
+                        child: postsData.items.length > 0
+                            ? ListView.builder(
+                                itemCount: postsData.items.length,
+                                itemBuilder: (_, i) => Column(
+                                  children: [
+                                    PostItem(
+                                      postsData.items[i].id,
+                                    ),
+                                    Divider(),
+                                  ],
+                                ),
+                              )
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.insert_drive_file_outlined,
+                                      size: 48,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      'No Posts Yet',
+                                      textScaleFactor: 1.5,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Divider(),
-                            ],
-                          ),
-                        ),
                       ),
                     ),
                   ),
