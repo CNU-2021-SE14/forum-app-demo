@@ -63,58 +63,85 @@ class PostDetailScreen extends StatelessWidget {
               ]
             : null,
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshPosts(context, post.boardId!),
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(8),
-          child: Column(
-            children: <Widget>[
-              // 아이콘, 익명, datetime
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: CircleAvatar(
-                    backgroundColor: Color(0xffE6E6E6),
-                    child: Icon(
-                      Icons.person,
-                      color: Color(0xffCCCCCC),
+      body: Stack(children: [
+        RefreshIndicator(
+          onRefresh: () => _refreshPosts(context, post.boardId!),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: <Widget>[
+                // 아이콘, 익명, datetime
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: CircleAvatar(
+                      backgroundColor: Color(0xffE6E6E6),
+                      child: Icon(
+                        Icons.person,
+                        color: Color(0xffCCCCCC),
+                      ),
+                    ),
+                  ),
+                  title: Text('익명'),
+                  subtitle: Text(
+                      DateFormat('yy/MM/dd - HH:mm:ss').format(post.datetime)),
+                ),
+                // 제목
+                Container(
+                  padding: EdgeInsets.all(8),
+                  width: double.infinity,
+                  child: Text(
+                    post.title!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textScaleFactor: 1.4,
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+                // 내용
+                Container(
+                  padding: EdgeInsets.all(8),
+                  child: Text(post.contents!),
+                ),
+                // TODO: 아래에 댓글 표시
+              ],
+            ),
+          ),
+        ),
+        Align(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Container(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        hintText: "댓글을 입력하세요.",
+                        hintStyle: new TextStyle(color: Colors.black26),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: () {
+                            // TODO: 댓글 등록 구현
+                          },
+                        ),
+                        isDense: true,
+                      ),
                     ),
                   ),
                 ),
-                title: Text('익명'),
-                subtitle: Text(
-                    DateFormat('yy/MM/dd - HH:mm:ss').format(post.datetime)),
-              ),
-              // 제목
-              Container(
-                padding: EdgeInsets.all(8),
-                width: double.infinity,
-                child: Text(
-                  post.title!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textScaleFactor: 1.4,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              // 내용
-              Container(
-                padding: EdgeInsets.all(8),
-                child: Text(post.contents!),
-              ),
-              // TODO: 아래에 댓글 표시
-            ],
+              ],
+            ),
           ),
+          alignment: Alignment.bottomCenter,
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: 댓글 작성 logic
-        },
-        label: const Text('댓글 작성'),
-        icon: const Icon(Icons.comment),
-        backgroundColor: Colors.pink,
-      ),
+      ]),
     );
   }
 }
