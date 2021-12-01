@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
-import './post.dart';
+import '../models/post.dart';
 
 class Posts with ChangeNotifier {
   List<Post> _items = [];

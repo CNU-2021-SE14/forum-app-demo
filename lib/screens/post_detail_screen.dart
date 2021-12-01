@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/edit_post_screen.dart';
 import '../providers/auth.dart';
-import '../providers/post.dart';
+import '../models/post.dart';
 import '../providers/posts.dart';
 
 class PostDetailScreen extends StatelessWidget {

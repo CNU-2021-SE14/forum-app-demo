@@ -1,9 +1,4 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-
-class Post with ChangeNotifier {
+class Post {
   final String? id;
   final String? title;
   final String? contents;
