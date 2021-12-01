@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +23,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scaffold = Scaffold.of(context);
-
     final id = ModalRoute.of(context)!.settings.arguments as String;
     final post =
         Provider.of<Posts>(context).items.firstWhere((post) => post.id == id);
@@ -41,7 +37,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           overflow: TextOverflow.ellipsis,
         ),
         // 글쓴이가 자기 자신이면 수정, 삭제 버튼 활성
-        actions: authUserId == id
+        actions: authUserId == post.userId
             ? <Widget>[
                 IconButton(
                   icon: const Icon(Icons.edit),
@@ -59,7 +55,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           .deletePost(id);
                       Navigator.of(context).pop();
                     } catch (error) {
-                      scaffold.showSnackBar(SnackBar(
+                      Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text(
                           "삭제하지 못했습니다.",
                           textAlign: TextAlign.center,

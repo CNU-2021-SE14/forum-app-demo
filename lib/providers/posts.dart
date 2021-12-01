@@ -15,13 +15,13 @@ class Posts with ChangeNotifier {
   Posts(this.authToken, this.userId, this._items);
 
   List<Post> get items {
-    return [..._items];
+    return [..._items.reversed];
   }
 
   Future<void> fetchAndSetPosts(String boardId) async {
     final filterString = 'orderBy="boardId"&equalTo="$boardId"';
-    var url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
-        'posts.json?auth=$authToken&$filterString');
+    var url =
+        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -48,8 +48,8 @@ class Posts with ChangeNotifier {
   }
 
   Future<void> addPost(Post post) async {
-    final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
-        '/posts.json?auth=$authToken');
+    final url =
+        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken';
     final timeStamp = DateTime.now();
 
     try {
@@ -85,8 +85,8 @@ class Posts with ChangeNotifier {
   Future<void> updatePost(String? id, Post newPost) async {
     final postIndex = _items.indexWhere((post) => post.id == id);
     if (postIndex >= 0) {
-      final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
-          '/posts/$id.json?auth=$authToken');
+      final url =
+          'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts/$id.json?auth=$authToken';
       await http.patch(url,
           body: json.encode({
             'title': newPost.title,
@@ -100,8 +100,8 @@ class Posts with ChangeNotifier {
   }
 
   Future<void> deletePost(String id) async {
-    final url = Uri.https('flutterforumdemoapp-default-rtdb.firebaseio.com',
-        '/posts/$id.json?auth=$authToken');
+    final url =
+        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts/$id.json?auth=$authToken';
 
     final existingPostIndex = _items.indexWhere((post) => post.id == id);
     Post? existingPost = _items[existingPostIndex];
