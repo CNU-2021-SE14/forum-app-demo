@@ -13,13 +13,13 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('MainScreen'),
+            title: Text('Menu'),
             automaticallyImplyLeading: false,
           ),
           // Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text('logout'),
+            title: Text('로그아웃'),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
