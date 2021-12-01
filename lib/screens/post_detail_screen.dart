@@ -87,13 +87,21 @@ class PostDetailScreen extends StatelessWidget {
                     DateFormat('yy/MM/dd - HH:mm:ss').format(post.datetime)),
               ),
               // 제목
-              Text(
-                post.title!,
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textScaleFactor: 1.2,
+              Container(
+                padding: EdgeInsets.all(8),
+                width: double.infinity,
+                child: Text(
+                  post.title!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textScaleFactor: 1.4,
+                  textAlign: TextAlign.start,
+                ),
               ),
               // 내용
-              Text(post.contents!, softWrap: true),
+              Container(
+                padding: EdgeInsets.all(8),
+                child: Text(post.contents!),
+              ),
               // TODO: 아래에 댓글 표시
             ],
           ),
