@@ -30,18 +30,20 @@ class MainScreen extends StatelessWidget {
                         itemCount: boardsData.items.length,
                         itemBuilder: (_, i) => Column(
                           children: [
-                            OutlinedButton(
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(
-                                  BoardScreen.routeName,
-                                  arguments: BoardScreenArguments(
-                                      boardsData.items[i].id,
-                                      boardsData.items[i].name),
-                                );
-                              },
-                              child: Text(boardsData.items[i].name),
+                            Container(
+                              width: double.infinity,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(
+                                    BoardScreen.routeName,
+                                    arguments: BoardScreenArguments(
+                                        boardsData.items[i].id,
+                                        boardsData.items[i].name),
+                                  );
+                                },
+                                child: Text(boardsData.items[i].name),
+                              ),
                             ),
-                            Divider(),
                           ],
                         ),
                       ),
