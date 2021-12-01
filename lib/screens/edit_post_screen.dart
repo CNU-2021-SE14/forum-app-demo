@@ -111,7 +111,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('글 작성'),
+        title: arguments['postId'] != null ? Text('글 수정') : Text('글 작성'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.check),
