@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
-import '../models/Comment.dart';
+import '../models/comment.dart';
 
 class Comments with ChangeNotifier {
   List<Comment> _items = [];
@@ -15,6 +15,9 @@ class Comments with ChangeNotifier {
   Comments(this.authToken, this.userId, this._items);
 
   List<Comment> get items {
+    _items.sort((a, b) {
+      return a.datetime!.compareTo(b.datetime!);
+    });
     return [..._items];
   }
 
@@ -34,7 +37,9 @@ class Comments with ChangeNotifier {
         loadedComments.add(Comment(
           id: commentId,
           contents: commentData['contents'],
-          datetime: DateTime.parse(commentData['datetime']),
+          datetime: DateTime.parse(commentData['datetime'])
+              .toUtc()
+              .add(Duration(hours: 9)),
           postId: commentData['postId'],
           userId: commentData['creatorId'],
         ));
@@ -58,7 +63,7 @@ class Comments with ChangeNotifier {
           'contents': comment.contents,
           'datetime': timeStamp.toIso8601String(),
           'postId': comment.postId,
-          'creatorId': comment.userId,
+          'creatorId': userId,
         }),
       );
 
@@ -87,7 +92,7 @@ class Comments with ChangeNotifier {
         _items.indexWhere((comment) => comment.id == id);
     Comment? existingComment = _items[existingCommentIndex];
     _items.removeAt(existingCommentIndex);
-    notifyListeners();
+    //notifyListeners();
 
     final response = await http.delete(url);
     if (response.statusCode >= 400) {

@@ -8,7 +8,7 @@ import './screens/main_screen.dart';
 import './screens/post_detail_screen.dart';
 import './screens/edit_post_screen.dart';
 import './providers/posts.dart';
-import './providers/Comments.dart';
+import 'providers/comments.dart';
 import './providers/auth.dart';
 import './providers/boards.dart';
 

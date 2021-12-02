@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/post_detail_screen.dart';
 import '../providers/posts.dart';
+import '../providers/comments.dart';
 import '../providers/auth.dart';
 
 class PostItem extends StatelessWidget {
@@ -30,10 +31,12 @@ class PostItem extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      trailing: (post.datetime!.difference(DateTime.now()).inDays > 1)
+      trailing: (DateTime.now().day - post.datetime!.day >= 1)
           ? Text(DateFormat('MM/dd').format(post.datetime))
           : Text(DateFormat('HH:mm').format(post.datetime)),
-      onTap: () {
+      onTap: () async {
+        await Provider.of<Comments>(context, listen: false)
+            .fetchAndSetComments(id!);
         Navigator.of(context)
             .pushNamed(PostDetailScreen.routeName, arguments: id);
       },
