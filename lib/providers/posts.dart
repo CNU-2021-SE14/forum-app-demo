@@ -15,7 +15,10 @@ class Posts with ChangeNotifier {
   Posts(this.authToken, this.userId, this._items);
 
   List<Post> get items {
-    return [..._items.reversed];
+    _items.sort((a, b) {
+      return b.datetime!.compareTo(a.datetime!);
+    });
+    return [..._items];
   }
 
   Future<void> fetchAndSetPosts(String boardId) async {

@@ -4,16 +4,33 @@ import 'package:provider/provider.dart';
 
 import '../screens/edit_post_screen.dart';
 import '../providers/auth.dart';
-import '../models/post.dart';
+import '../providers/Comments.dart';
 import '../providers/posts.dart';
 
-class PostDetailScreen extends StatelessWidget {
+class PostDetailScreen extends StatefulWidget {
   static const routeName = './postDetail';
 
   const PostDetailScreen({Key? key}) : super(key: key);
 
-  Future<void> _refreshPosts(BuildContext context, String boardId) async {
+  @override
+  _PostDetailScreenState createState() => _PostDetailScreenState();
+}
+
+class _PostDetailScreenState extends State<PostDetailScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _commentTextEditController = TextEditingController();
+
+  Future<void> _refreshPosts(
+      BuildContext context, String boardId, String postId) async {
     await Provider.of<Posts>(context, listen: false).fetchAndSetPosts(boardId);
+    await Provider.of<Comments>(context, listen: false)
+        .fetchAndSetComments(postId);
+  }
+
+  @override
+  void dispose() {
+    _commentTextEditController.dispose();
+    super.dispose();
   }
 
   @override
@@ -22,6 +39,7 @@ class PostDetailScreen extends StatelessWidget {
     final post = Provider.of<Posts>(context, listen: false)
         .items
         .firstWhere((post) => post.id == id);
+    final comments = Provider.of<Comments>(context, listen: false).items;
     final authUserId =
         Provider.of<Auth>(context, listen: false).userId as String;
 
@@ -65,7 +83,7 @@ class PostDetailScreen extends StatelessWidget {
       ),
       body: Stack(children: [
         RefreshIndicator(
-          onRefresh: () => _refreshPosts(context, post.boardId!),
+          onRefresh: () => _refreshPosts(context, post.boardId!, post.id!),
           child: SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.all(8),
@@ -103,7 +121,7 @@ class PostDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.all(8),
                   child: Text(post.contents!),
                 ),
-                // TODO: 아래에 댓글 표시
+                // 댓글 목록
               ],
             ),
           ),
@@ -115,23 +133,40 @@ class PostDetailScreen extends StatelessWidget {
               children: [
                 Flexible(
                   child: Container(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: Theme.of(context).primaryColor,
+                    child: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: _commentTextEditController,
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return '댓글을 입력하세요.';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
+                          hintText: "댓글을 입력하세요.",
+                          hintStyle: new TextStyle(color: Colors.black26),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.send),
+                            onPressed: () {
+                              print('input comment: ' +
+                                  _commentTextEditController.text);
+
+                              if (_formKey.currentState!.validate()) {
+                                _addComment(post.boardId!, post.id!);
+                              } else {
+                                null;
+                              }
+                            },
+                          ),
+                          isDense: true,
                         ),
-                        hintText: "댓글을 입력하세요.",
-                        hintStyle: new TextStyle(color: Colors.black26),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: () {
-                            // TODO: 댓글 등록 구현
-                          },
-                        ),
-                        isDense: true,
                       ),
                     ),
                   ),
@@ -143,5 +178,11 @@ class PostDetailScreen extends StatelessWidget {
         ),
       ]),
     );
+  }
+
+  Future<void> _addComment(String boardId, String postId) async {
+    await Provider.of<Comments>(context, listen: false)
+        .fetchAndSetComments(postId);
+    _refreshPosts(context, boardId, postId);
   }
 }
