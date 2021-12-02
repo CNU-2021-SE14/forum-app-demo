@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
-import './post.dart';
+import '../models/post.dart';
 
 class Posts with ChangeNotifier {
   List<Post> _items = [];
@@ -15,7 +15,10 @@ class Posts with ChangeNotifier {
   Posts(this.authToken, this.userId, this._items);
 
   List<Post> get items {
-    return [..._items.reversed];
+    _items.sort((a, b) {
+      return b.datetime!.compareTo(a.datetime!);
+    });
+    return [..._items];
   }
 
   Future<void> fetchAndSetPosts(String boardId) async {
@@ -35,7 +38,9 @@ class Posts with ChangeNotifier {
           id: postId,
           title: postData['title'],
           contents: postData['contents'],
-          datetime: DateTime.parse(postData['datetime']),
+          datetime: DateTime.parse(postData['datetime'])
+              .toUtc()
+              .add(Duration(hours: 9)),
           boardId: postData['boardId'],
           userId: postData['creatorId'],
         ));
@@ -106,7 +111,7 @@ class Posts with ChangeNotifier {
     final existingPostIndex = _items.indexWhere((post) => post.id == id);
     Post? existingPost = _items[existingPostIndex];
     _items.removeAt(existingPostIndex);
-    notifyListeners();
+    // notifyListeners();
 
     final response = await http.delete(url);
     if (response.statusCode >= 400) {
