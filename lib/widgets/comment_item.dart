@@ -48,8 +48,40 @@ class CommentItem extends StatelessWidget {
                     ? IconButton(
                         icon: Icon(Icons.close),
                         onPressed: () async {
-                          await Provider.of<Comments>(context, listen: false)
-                              .deleteComment(id!);
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: Text('삭제'),
+                              content: Text(
+                                '선택한 댓글을 삭제할까요?',
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text(
+                                    '취소',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop(false);
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    '확인',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () async {
+                                    await Provider.of<Comments>(context,
+                                            listen: false)
+                                        .deleteComment(id!);
+                                    Navigator.of(ctx).pop(true);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
                       )
                     : null,

@@ -68,18 +68,49 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () async {
-                    try {
-                      Navigator.pop(context);
-                      await Provider.of<Posts>(context, listen: false)
-                          .deletePost(id);
-                    } catch (error) {
-                      Scaffold.of(context).showSnackBar(SnackBar(
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('삭제'),
                         content: Text(
-                          "삭제하지 못했습니다.",
-                          textAlign: TextAlign.center,
+                          '게시글을 삭제할까요?',
                         ),
-                      ));
-                    }
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text(
+                              '취소',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            onPressed: () {
+                              Navigator.of(ctx).pop(false);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(
+                              '확인',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            onPressed: () async {
+                              Navigator.of(ctx).pop(true);
+                              try {
+                                Navigator.pop(context);
+                                await Provider.of<Posts>(context, listen: false)
+                                    .deletePost(id);
+                              } catch (error) {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                    "삭제하지 못했습니다.",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ));
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ]
