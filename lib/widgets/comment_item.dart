@@ -24,37 +24,43 @@ class CommentItem extends StatelessWidget {
       dt = DateFormat("hh:mm").format(comment.datetime!);
     }
 
-    return Column(children: [
-      ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.white,
-          child: CircleAvatar(
-            backgroundColor: Color(0xffE6E6E6),
-            child: Icon(
-              Icons.comment,
-              color: Color(0xffCCCCCC),
-            ),
-          ),
-        ),
-        title: Text(
-          comment.userId!.substring(0, 5) + '****   ' + '-   ' + dt,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(comment.contents!),
-        trailing: comment.userId == auth_uid
-            ? IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () async {
-                  await Provider.of<Comments>(context, listen: false)
-                      .deleteComment(id!);
-                },
-              )
-            : null,
-      ),
-      Divider(
-        thickness: 1,
-      ),
-    ]);
+    return (comment.userId != null)
+        ? Column(
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: CircleAvatar(
+                    backgroundColor: Color(0xffE6E6E6),
+                    child: Icon(
+                      Icons.comment,
+                      color: Color(0xffCCCCCC),
+                    ),
+                  ),
+                ),
+                title: Text(
+                  comment.userId!.substring(0, 5) + '****   ' + '-   ' + dt,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(comment.contents!),
+                trailing: comment.userId == auth_uid
+                    ? IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () async {
+                          await Provider.of<Comments>(context, listen: false)
+                              .deleteComment(id!);
+                        },
+                      )
+                    : null,
+              ),
+              Divider(
+                thickness: 1,
+              ),
+            ],
+          )
+        : SizedBox(
+            height: 0,
+          );
   }
 }
