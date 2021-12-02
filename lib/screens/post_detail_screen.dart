@@ -20,6 +20,7 @@ class PostDetailScreen extends StatefulWidget {
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
+  var _isLoading = false;
   final _commentFocusNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _commentTextEditController = TextEditingController();
@@ -186,23 +187,25 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                             hintText: "댓글을 입력하세요.",
                             hintStyle: new TextStyle(color: Colors.black26),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.send),
-                              onPressed: () {
-                                print('input comment: ' +
-                                    _commentTextEditController.text);
+                            suffixIcon: _isLoading
+                                ? CircularProgressIndicator()
+                                : IconButton(
+                                    icon: Icon(Icons.send),
+                                    onPressed: () {
+                                      print('input comment: ' +
+                                          _commentTextEditController.text);
 
-                                if (_formKey.currentState!.validate()) {
-                                  _addComment(post.boardId!, post.id!,
-                                      _commentTextEditController.text);
+                                      if (_formKey.currentState!.validate()) {
+                                        _addComment(post.boardId!, post.id!,
+                                            _commentTextEditController.text);
 
-                                  _commentTextEditController.clear();
-                                  _commentFocusNode.unfocus();
-                                } else {
-                                  null;
-                                }
-                              },
-                            ),
+                                        _commentTextEditController.clear();
+                                        _commentFocusNode.unfocus();
+                                      } else {
+                                        null;
+                                      }
+                                    },
+                                  ),
                             isDense: true,
                           ),
                         ),
@@ -227,7 +230,13 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         userId: null,
         datetime: null,
         id: null);
+    setState(() {
+      _isLoading = true;
+    });
     await Provider.of<Comments>(context, listen: false).addComment(comment);
     _refreshPosts(context, boardId, postId);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

@@ -72,7 +72,7 @@ class Posts with ChangeNotifier {
       final newPost = Post(
         title: post.title,
         contents: post.contents,
-        datetime: timeStamp,
+        datetime: timeStamp.add(Duration(hours: 9)),
         boardId: post.boardId,
         userId: post.userId,
         id: json.decode(response.body)['name'],
