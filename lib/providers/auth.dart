@@ -12,6 +12,7 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   String? _userId;
   Timer? _authTimer;
+  String? _email;
 
   bool get isAuth {
     return token != null;
@@ -30,10 +31,14 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
+  String? get email {
+    return _email;
+  }
+
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
-    final url =
-        Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyAy5DPIqanV8N4AZ4fRpX7MJTEsNwoFwgA');
+    final url = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyAy5DPIqanV8N4AZ4fRpX7MJTEsNwoFwgA');
     try {
       final response = await http.post(
         url,
@@ -58,6 +63,7 @@ class Auth with ChangeNotifier {
           ),
         ),
       );
+      _email = responseData['email'];
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
@@ -66,6 +72,7 @@ class Auth with ChangeNotifier {
           'token': _token,
           'userId': _userId,
           'expiryDate': _expiryDate!.toIso8601String(),
+          'email': _email,
         },
       );
       prefs.setString('userData', userData);
@@ -87,8 +94,10 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
-    final expiryDate = DateTime.parse(extractedUserData['expiryDate'] as String);
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expiryDate =
+        DateTime.parse(extractedUserData['expiryDate'] as String);
 
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
@@ -96,6 +105,7 @@ class Auth with ChangeNotifier {
     _token = extractedUserData['token'] as String;
     _userId = extractedUserData['userId'] as String;
     _expiryDate = expiryDate;
+    _email = extractedUserData['email'] as String;
     notifyListeners();
     _autoLogout();
     return true;
@@ -105,6 +115,7 @@ class Auth with ChangeNotifier {
     _token = null;
     _userId = null;
     _expiryDate = null;
+    _email = null;
     if (_authTimer != null) {
       _authTimer!.cancel();
       _authTimer = null;

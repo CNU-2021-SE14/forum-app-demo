@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import '../screens/edit_post_screen.dart';
 import '../providers/auth.dart';
 import '../providers/comments.dart';
+import '../providers/notifications.dart';
 import '../providers/posts.dart';
 import '../widgets/comment_item.dart';
 import '../models/comment.dart';
+import '../models/notification.dart' as noti;
 
 class PostDetailScreen extends StatefulWidget {
   static const routeName = './postDetail';
@@ -156,9 +158,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ),
                   // 내용
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    child: Text(post.contents!),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(post.contents!),
+                    ),
                   ),
                   SizedBox(
                     height: 1,
@@ -223,15 +228,25 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 : IconButton(
                                     icon: Icon(Icons.send),
                                     onPressed: () {
+                                      String commentText =
+                                          _commentTextEditController.text;
                                       print('input comment: ' +
                                           _commentTextEditController.text);
 
                                       if (_formKey.currentState!.validate()) {
                                         _addComment(post.boardId!, post.id!,
-                                            _commentTextEditController.text);
+                                            commentText);
 
                                         _commentTextEditController.clear();
                                         _commentFocusNode.unfocus();
+
+                                        if (post.userId != authUserId) {
+                                          _addNotification(
+                                              post.title!,
+                                              commentText,
+                                              post.id!,
+                                              post.userId!);
+                                        }
                                       } else {
                                         null;
                                       }
@@ -269,5 +284,19 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Future<void> _addNotification(String postTitle, String contents,
+      String postId, String receiverId) async {
+    final notification = noti.Notification(
+      title: "새로운 댓글: " + postTitle,
+      contents: contents,
+      datetime: null,
+      id: null,
+      postId: postId,
+      receiverId: receiverId,
+    );
+    await Provider.of<Notifications>(context, listen: false)
+        .addNotification(notification);
   }
 }
