@@ -44,7 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         ),
                       ),
                     ),
-                    title: Text(userEmail!),
+                    title: Text(userEmail),
                   ),
                 )
               : Container(),
