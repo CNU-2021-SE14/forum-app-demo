@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/boards.dart';
+import '../providers/auth.dart';
+import '../providers/notifications.dart';
 import '../widgets/app_drawer.dart';
 
 class MainScreen extends StatelessWidget {
@@ -12,6 +14,7 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<Auth>(context).userId;
     return Scaffold(
       appBar: AppBar(
         title: Text('게시판 목록'),

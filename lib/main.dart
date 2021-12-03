@@ -5,12 +5,14 @@ import './screens/splash_screen.dart';
 import './screens/board_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/main_screen.dart';
+import './screens/notification_center_screen.dart';
 import './screens/post_detail_screen.dart';
 import './screens/edit_post_screen.dart';
 import './providers/posts.dart';
 import 'providers/comments.dart';
 import './providers/auth.dart';
 import './providers/boards.dart';
+import './providers/notifications.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,6 +47,14 @@ class MyApp extends StatelessWidget {
             previousComments == null ? [] : previousComments.items,
           ),
         ),
+        ChangeNotifierProxyProvider<Auth, Notifications>(
+          create: (_) => Notifications('', '', []),
+          update: (ctx, auth, previousNotifications) => Notifications(
+            auth.token,
+            auth.userId,
+            previousNotifications == null ? [] : previousNotifications.items,
+          ),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -69,6 +79,7 @@ class MyApp extends StatelessWidget {
             BoardScreen.routeName: (ctx) => BoardScreen(),
             PostDetailScreen.routeName: (ctx) => PostDetailScreen(),
             EditPostScreen.routeName: (ctx) => EditPostScreen(),
+            NotiCenterScreen.routeName: (ctx) => NotiCenterScreen(),
           },
         ),
       ),
