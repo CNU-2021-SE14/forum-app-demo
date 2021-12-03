@@ -21,13 +21,14 @@ class CommentItem extends StatelessWidget {
     if (timediff >= 1) {
       dt = timediff.toString() + "일 전";
     } else {
-      dt = DateFormat("hh:mm").format(comment.datetime!);
+      dt = DateFormat("HH:mm").format(comment.datetime!);
     }
 
     return (comment.userId != null)
         ? Column(
             children: [
               ListTile(
+                dense: true,
                 leading: CircleAvatar(
                   backgroundColor: Colors.white,
                   child: CircleAvatar(

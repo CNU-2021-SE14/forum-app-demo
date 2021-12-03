@@ -38,9 +38,7 @@ class Posts with ChangeNotifier {
           id: postId,
           title: postData['title'],
           contents: postData['contents'],
-          datetime: DateTime.parse(postData['datetime'])
-              .toUtc()
-              .add(Duration(hours: 9)),
+          datetime: DateTime.parse(postData['datetime']),
           boardId: postData['boardId'],
           userId: postData['creatorId'],
         ));
@@ -72,7 +70,7 @@ class Posts with ChangeNotifier {
       final newPost = Post(
         title: post.title,
         contents: post.contents,
-        datetime: timeStamp.add(Duration(hours: 9)),
+        datetime: timeStamp,
         boardId: post.boardId,
         userId: post.userId,
         id: json.decode(response.body)['name'],
