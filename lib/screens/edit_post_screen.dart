@@ -162,7 +162,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         decoration: InputDecoration(labelText: '내용'),
                         maxLines: 15,
                         keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.done,
+                        textInputAction: TextInputAction.newline,
                         focusNode: _contentsFocusNode,
                         validator: (value) {
                           if (value!.isEmpty) {
