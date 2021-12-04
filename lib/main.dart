@@ -1,3 +1,4 @@
+import 'package:first_app/screens/serach_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
             PostDetailScreen.routeName: (ctx) => PostDetailScreen(),
             EditPostScreen.routeName: (ctx) => EditPostScreen(),
             NotiCenterScreen.routeName: (ctx) => NotiCenterScreen(),
+            SearchScreen.routeName:(ctx)=>SearchScreen(),
           },
         ),
       ),

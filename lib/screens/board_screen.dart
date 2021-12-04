@@ -1,3 +1,4 @@
+import 'package:first_app/screens/serach_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class BoardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args =
-        ModalRoute.of(context)!.settings.arguments as BoardScreenArguments;
+        ModalRoute.of(context)!.settings.arguments as BoardScreenArguments;//받아오는 부분
     final boardId = args.boardId;
     final boardName = args.boardName;
 
@@ -25,6 +26,12 @@ class BoardScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('$boardName'),
         actions: <Widget>[
+          IconButton(
+              icon: const Icon(Icons.search),
+          onPressed: (){
+            Navigator.of(context).pushNamed(SearchScreen.routeName,
+                arguments: boardId);
+            }),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {

@@ -43,6 +43,42 @@ class Posts with ChangeNotifier {
           userId: postData['creatorId'],
         ));
       });
+      _items=[];
+      _items = loadedPosts;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+  Future<void> fetchAndSetPosts2(String boardId, String SearchText) async {
+
+    final filterString = 'orderBy="boardId"&equalTo="$boardId"';
+    var url =
+        'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken&$filterString';
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+
+      final List<Post> loadedPosts = [];
+      extractedData.forEach((postId, postData) {
+        String title = postData['title'];
+        String con = postData['contents'];
+        if(title.contains(SearchText)||(con.contains(SearchText))&&!SearchText.isEmpty)
+        {
+          loadedPosts.add(Post(
+          id: postId,
+          title: postData['title'],
+          contents: postData['contents'],
+          datetime: DateTime.parse(postData['datetime']),
+          boardId: postData['boardId'],
+          userId: postData['creatorId'],
+          ));
+        }
+      });
+      _items=[];
       _items = loadedPosts;
       notifyListeners();
     } catch (error) {
