@@ -51,7 +51,6 @@ class Posts with ChangeNotifier {
     }
   }
   Future<void> fetchAndSetPosts2(String boardId, String SearchText) async {
-
     final filterString = 'orderBy="boardId"&equalTo="$boardId"';
     var url =
         'https://flutterforumdemoapp-default-rtdb.firebaseio.com/posts.json?auth=$authToken&$filterString';
