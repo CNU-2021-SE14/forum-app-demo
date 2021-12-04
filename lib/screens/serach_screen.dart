@@ -105,10 +105,3 @@ class _SerachScreen extends State<SearchScreen>{
     );
   }
 }
-/*
-body: Container(
-        child: Center(
-          child: Text("page"),
-        ),
-      ),
-* */
